@@ -1,20 +1,16 @@
 import React, { useCallback } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducer';
 import { Order } from '../slices/order';
+import EachOrder from '../components/EachOrder';
 
 const Orders = () => {
     const orders = useSelector((state: RootState) => state.order.orders);
 
     const renderItem = useCallback(({ item }: { item: Order }) => {
-        return (
-            <View>
-                <View>
-                    <Text>{item.orderId}</Text>
-                </View>
-            </View>
-        );
+        return <EachOrder item={item} />;
+        /*반복문 분리(최적화)*/
     }, []);
 
     return (
