@@ -496,7 +496,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zerocho.fooddeliveryapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cdw.fooddeliveryapp;
 				PRODUCT_NAME = FoodDeliveryApp;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -522,7 +522,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zerocho.fooddeliveryapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cdw.fooddeliveryapp;
 				PRODUCT_NAME = FoodDeliveryApp;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

@@ -1,4 +1,4 @@
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import orderSlice, { Order } from '../slices/order';
 import { useAppDispatch } from '../store';
@@ -9,6 +9,7 @@ import { RootState } from '../store/reducer';
 import Config from 'react-native-config';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { LoggedInParamList } from '../../AppInner';
+import NaverMapView, { Marker, Path } from 'react-native-nmap';
 
 interface Props {
     item: Order;
@@ -18,6 +19,7 @@ function EachOrder({ item }: Props) {
     const dispatch = useAppDispatch();
     const accessToken = useSelector((state: RootState) => state.user.accessToken);
     const [detail, showDetail] = useState(false);
+    const { start, end } = item;
 
     const onAccept = useCallback(async () => {
         if (!accessToken) {
@@ -35,6 +37,7 @@ function EachOrder({ item }: Props) {
             let errorResponse = (error as AxiosError).response;
             if (errorResponse?.status === 400) {
                 // 타인이 이미 수락한 경우
+                // @ts-ignore
                 Alert.alert('알림', errorResponse.data.message);
                 dispatch(orderSlice.actions.rejectOrder(item.orderId));
             }
@@ -44,7 +47,6 @@ function EachOrder({ item }: Props) {
     const onReject = useCallback(() => {
         dispatch(orderSlice.actions.rejectOrder(item.orderId));
     }, [dispatch, item]);
-    const { start, end } = item;
 
     const toggleDetail = useCallback(() => {
         showDetail((prevState) => !prevState);
@@ -68,8 +70,41 @@ function EachOrder({ item }: Props) {
             </Pressable>
             {detail && (
                 <View>
-                    <View>
-                        <Text>네이버맵이 들어갈 장소</Text>
+                    <View
+                        style={{
+                            width: Dimensions.get('window').width - 30,
+                            height: 200,
+                            marginTop: 10,
+                        }}>
+                        <NaverMapView
+                            style={{ width: '100%', height: '100%' }}
+                            zoomControl={false}
+                            center={{
+                                zoom: 10,
+                                tilt: 50,
+                                latitude: (start.latitude + end.latitude) / 2,
+                                longitude: (start.longitude + end.longitude) / 2,
+                            }}>
+                            <Marker
+                                coordinate={{
+                                    latitude: start.latitude,
+                                    longitude: start.longitude,
+                                }}
+                                pinColor="blue"
+                            />
+                            <Path
+                                coordinates={[
+                                    {
+                                        latitude: start.latitude,
+                                        longitude: start.longitude,
+                                    },
+                                    { latitude: end.latitude, longitude: end.longitude },
+                                ]}
+                            />
+                            <Marker
+                                coordinate={{ latitude: end.latitude, longitude: end.longitude }}
+                            />
+                        </NaverMapView>
                     </View>
                     <View style={styles.buttonWrapper}>
                         <Pressable onPress={onAccept} style={styles.acceptButton}>
