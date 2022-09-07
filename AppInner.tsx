@@ -17,6 +17,7 @@ import { useAppDispatch } from './src/store';
 import { Alert } from 'react-native';
 import userSlice from './src/slices/user';
 import orderSlice from './src/slices/order';
+import usePermissions from './src/hooks/usePermissions';
 
 export type LoggedInParamList = {
     Orders: undefined;
@@ -86,6 +87,8 @@ function AppInner() {
             }
         };
     }, [isLoggedIn, socket]);
+
+    usePermissions();
 
     // 앱 실행 시 토큰 있으면 로그인하는 코드
     useEffect(() => {
